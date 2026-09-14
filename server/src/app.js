@@ -1,5 +1,7 @@
 import 'dotenv/config'
 import express from 'express'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import cors from 'cors'
 import helmet from 'helmet'
 import rateLimit from 'express-rate-limit'
@@ -21,6 +23,8 @@ import { createCheckin } from './controllers/checkinController.js'
 import { calculateRisk } from './services/riskEngine.js'
 
 export const app = express()
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const frontendDist = path.resolve(__dirname, '../../dist')
 app.use(helmet())
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }))
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardHeaders: 'draft-7', legacyHeaders: false }))
@@ -43,5 +47,7 @@ app.get('/api/alerts', (req, res) => listAlerts(req, res))
 app.get('/api/analytics', (_req, res) => res.json({ trend: store.trend, units: dashboard().unitStatistics }))
 app.post('/api/checkin', (req, res) => res.json(calculateRisk(req.body)))
 app.post('/api/predict', (req, res) => res.json(calculateRisk(req.body)))
+app.use(express.static(frontendDist))
+app.get(/^(?!\/api).*/, (_req, res) => res.sendFile(path.join(frontendDist, 'index.html')))
 app.use(notFound)
 app.use(errorHandler)

@@ -20,6 +20,8 @@ npm run dev
 ```
 Open `http://localhost:5173`. Vite proxies `/api` requests to the backend at `http://localhost:5000`.
 
+For a single-host deployment, the Express server serves the built Vite frontend and the API from the same origin. Set the service start command to `npm start`, the build command to `npm install && npm run build`, and the health check to `/api/health`. A ready-to-use `render.yaml` is included for Render.
+
 The backend starts without MongoDB by using an in-memory fictional demo fallback. To use MongoDB, copy `server/.env.example` to `server/.env` or configure the root environment with `MONGODB_URI`.
 
 ## Demo credentials
