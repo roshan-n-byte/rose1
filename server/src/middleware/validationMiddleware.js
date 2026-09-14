@@ -1,0 +1,5 @@
+import Joi from 'joi'
+
+export const checkinSchema = Joi.object({ personnelId: Joi.string().required(), workload: Joi.number().integer().min(1).max(10).required(), restLevel: Joi.number().integer().min(1).max(10).required(), stressLevel: Joi.number().integer().min(1).max(10).required(), wellbeing: Joi.number().integer().min(1).max(10).required(), dutyHours: Joi.number().min(0).max(24).required(), restDays: Joi.number().min(0).max(7).required(), concerns: Joi.string().max(500).allow(''), notes: Joi.string().max(1000).allow('') })
+export const authSchema = Joi.object({ name: Joi.string().min(2).max(100).required(), email: Joi.string().email().required(), password: Joi.string().min(6).max(100).required(), role: Joi.string().valid('ADMIN', 'WELFARE_OFFICER', 'UNIT_OFFICER', 'PERSONNEL').default('WELFARE_OFFICER') })
+export function validate(schema) { return (req, res, next) => { const { error, value } = schema.validate(req.body, { abortEarly: false, stripUnknown: true }); if (error) return res.status(400).json({ success: false, message: 'Validation failed', errors: error.details.map((item) => item.message) }); req.body = value; next() } }

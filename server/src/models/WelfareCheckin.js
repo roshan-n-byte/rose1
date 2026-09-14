@@ -1,0 +1,3 @@
+import mongoose from 'mongoose'
+const schema = new mongoose.Schema({ personnelId: { type: String, required: true }, workload: { type: Number, min: 1, max: 10, required: true }, restLevel: { type: Number, min: 1, max: 10, required: true }, stressLevel: { type: Number, min: 1, max: 10, required: true }, wellbeing: { type: Number, min: 1, max: 10, required: true }, dutyHours: { type: Number, min: 0, max: 24, required: true }, restDays: { type: Number, min: 0, max: 7, required: true }, concerns: String, notes: String }, { timestamps: true })
+export default mongoose.models.WelfareCheckin || mongoose.model('WelfareCheckin', schema)

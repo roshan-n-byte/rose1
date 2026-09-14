@@ -1,0 +1,7 @@
+import { randomUUID } from 'node:crypto'
+import { store } from '../config/store.js'
+import { calculateRisk } from '../services/riskEngine.js'
+
+export function createCheckin(req, res) { const result = calculateRisk(req.body); const checkin = { id: randomUUID(), ...req.body, createdAt: new Date() }; const prediction = { id: randomUUID(), personnelId: req.body.personnelId, ...result, createdAt: new Date() }; store.checkins.push(checkin); store.predictions.push(prediction); const person = store.personnel.find((item) => item.personnelId === req.body.personnelId); if (person) { Object.assign(person, { workloadScore: req.body.workload * 10, fatigueScore: result.fatigueRisk, stressScore: result.stressRisk, welfareScore: result.welfareRisk, riskScore: result.riskScore, riskLevel: result.riskLevel, lastCheckin: new Date(), updatedAt: new Date() }) } if (result.riskScore >= 70) store.alerts.unshift({ alertId: `ALT-${800 + store.alerts.length}`, personnelId: req.body.personnelId, type: 'FOLLOW_UP', severity: 'HIGH', message: 'Prototype risk score crossed high-risk threshold', riskScore: result.riskScore, status: 'NEW', createdAt: new Date() }); res.status(201).json({ success: true, data: { checkin, prediction }, disclaimer: result.disclaimer }) }
+export function listCheckins(req, res) { res.json({ success: true, data: store.checkins.filter((item) => item.personnelId === req.params.personnelId) }) }
+export function recentCheckins(_req, res) { res.json({ success: true, data: store.checkins.slice(-20).reverse() }) }
