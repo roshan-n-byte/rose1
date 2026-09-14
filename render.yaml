@@ -14,3 +14,8 @@ services:
         sync: false
       - key: CLIENT_URL
         sync: false
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: ai-welfare-monitor
+          property: host

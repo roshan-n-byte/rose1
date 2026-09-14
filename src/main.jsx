@@ -7,7 +7,8 @@ import './styles.css'
 const fallback = { total: 437, monitored: 389, low: 18, moderate: 5, high: 2, trend: [{ day: 'Mon', stress: 38, fatigue: 42, welfare: 78 }, { day: 'Tue', stress: 44, fatigue: 46, welfare: 74 }, { day: 'Wed', stress: 41, fatigue: 43, welfare: 76 }, { day: 'Thu', stress: 52, fatigue: 55, welfare: 68 }, { day: 'Fri', stress: 49, fatigue: 51, welfare: 71 }, { day: 'Sat', stress: 58, fatigue: 61, welfare: 63 }, { day: 'Sun', stress: 55, fatigue: 57, welfare: 67 }], alerts: [] }
 const navItems = [{ id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard }, { id: 'personnel', label: 'Personnel', icon: Users }, { id: 'analysis', label: 'AI Analysis', icon: BrainCircuit }, { id: 'checkin', label: 'Welfare Check-in', icon: HeartPulse }, { id: 'analytics', label: 'Analytics', icon: BarChart3 }, { id: 'alerts', label: 'Alerts', icon: AlertTriangle }, { id: 'governance', label: 'Governance', icon: ShieldCheck }, { id: 'settings', label: 'Settings', icon: Settings }]
 const colors = { green: '#3ddc97', amber: '#f4b942', red: '#ff6b6b', cyan: '#6edff6' }
-const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
+const configuredApiUrl = (import.meta.env.VITE_API_URL || '').trim()
+const API_BASE = configuredApiUrl ? `${configuredApiUrl.startsWith('http') ? configuredApiUrl : `https://${configuredApiUrl}`}`.replace(/\/$/, '') : ''
 const apiFetch = (path, options) => fetch(`${API_BASE}${path}`, options)
 
 function App() {
