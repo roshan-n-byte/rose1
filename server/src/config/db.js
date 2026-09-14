@@ -11,3 +11,7 @@ export async function connectDatabase() {
     return { connected: false, reason: 'MongoDB unavailable; in-memory fallback active' }
   }
 }
+
+export function databaseStatus() {
+  return mongoose.connection.readyState === 1 ? 'connected' : 'in-memory demo fallback'
+}
