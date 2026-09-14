@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  base: process.env.GITHUB_ACTIONS ? '/rose1/' : '/',
   server: {
     port: 5173,
     proxy: { '/api': 'http://localhost:5000' },
